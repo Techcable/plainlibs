@@ -1,9 +1,11 @@
 /**
- * A C99 argparsing library, designed for idiots.
+ * A C99 argparsing library, part of libidiot.
  * 
- * No documentation, just read the source.
+ * No documentation (yet), just read the source.
  * 
- * Licensed under Creative Commons CC0 (Public Domain).
+ * Dual-licensed under Creative Commons CC0 (Public Domain) and the MIT License.
+ * 
+ * Source code & issue tracker: https://github.com/Techcable/libidiot
  * 
  * VERSION: 0.1.0-beta.2
  *
