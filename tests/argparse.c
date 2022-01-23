@@ -1,6 +1,12 @@
-#include <assert.h>
+#include <criterion/criterion.h>
+#include <criterion/new/assert.h>
 
 #include "plain/argparse.h"
+
+#ifdef __clang__
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wunused-value"
+#endif
 
 struct simple_flags {
     char *foo;
@@ -19,74 +25,64 @@ static void parse_simple_flags(struct arg_parser *parser, struct simple_flags *f
         // NOTE: Has no short name, only aliases (bazzy)
         static const struct arg_config BAZ_CONFIG = {.flag = true, .aliases = BAZ_ALIASES};
         if (match_arg(parser, "foo", &FOO_CONFIG)) {
-            assert(parser->current_value != NULL);
+            cr_assert(ne(ptr, parser->current_value, NULL));
             flags->foo = parser->current_value;
+            fprintf(stderr, "Found foo\n");
         } else if (match_arg(parser, "bar", &BAR_CONFIG)) {
-            assert(parser->current_value == NULL);
+            cr_assert(eq(ptr, parser->current_value, NULL));
             flags->bar = true;
+            fprintf(stderr, "Found bar\n");
         } else if (match_arg(parser, "baz", &BAZ_CONFIG)) {
-            assert(parser->current_value == NULL);
+            cr_assert(eq(ptr, parser->current_value, NULL));
+            fprintf(stderr, "Found baz\n");
             flags->baz = true;
         } else if (match_arg(parser, "long-only-value", NULL)) {
-            assert(parser->current_value != NULL);
+            cr_assert(ne(parser->current_value, NULL));
             flags->long_only_value = parser->current_value;
         } else {
-            fprintf(stderr, "Unknown flag: %s\n", current_arg(parser));
-            abort();
+            cr_fail("Unknown flag: %s", current_arg(parser));
         }
     }
 }
-
-int nullsafe_strcmp(char *first, char *second) {
-    if (first == NULL) {
-        if (second == NULL) return 0;
-        else return 1;
-    } else if (second == NULL) return 1;
-    else {
-        return strcmp(first, second);
-    }
-}
-
-
 static void assert_flags_equal(struct simple_flags *expected, struct simple_flags *actual) {
-    assert(nullsafe_strcmp(expected->foo, actual->foo) == 0);
-    assert(expected->bar == actual->bar);
-    assert(expected->baz == actual->baz);
-    assert(nullsafe_strcmp(expected->long_only_value, actual->long_only_value) == 0);
+    cr_assert(eq(str, expected->foo, actual->foo));
+    cr_assert(eq(u8, expected->bar, actual->bar), "Expected --bar=%d, but got --bar=%d", expected->bar, actual->bar);
+    cr_assert(eq(u8, expected->baz, actual->baz), "Expected --baz=%d, but got --baz=%d", expected->baz, actual->baz);
+    cr_assert(eq(str, expected->long_only_value, actual->long_only_value));
 }
 #define POS_BUF_SIZE 12
 static size_t parse_positional(struct arg_parser *parser, char *buf[POS_BUF_SIZE]) {
     size_t len = 0;
-    assert(!has_flag_args(parser)); // Has flag args (but expected positional)
+    cr_assert(not(has_flag_args(parser)), "Has flag args (but expected positional)");
     while (has_args(parser)) {
-        assert(len < POS_BUF_SIZE); // Expected < POS_BUF_SIZE args
+        cr_assert(lt(uptr, len, POS_BUF_SIZE), "Expected <= %lld args, but got more", POS_BUF_SIZE);
         char *value = consume_arg(parser);
-        assert(value != NULL);
+        cr_assert(ne(ptr, value, NULL));
         buf[len++] = value;
     }
     return len;
 }
 
-void test_empty_args() {
+Test(argparse, empty_args) {
     static char *ARGS[] = {"exe", NULL};
     struct arg_parser parser = init_args(1, ARGS);
-    assert(!has_flag_args(&parser));
-    assert(!has_args(&parser));
+    cr_assert(not(has_flag_args(&parser)));
+    cr_assert(not(has_args(&parser)));
 }
 
-void test_only_positional() {
+Test(argparse, only_positional) {
     static char *ARGS[] = {"exe", "going", "poop", "-17", "--", NULL};
     struct arg_parser parser = init_args(5, ARGS);
-    assert(!has_flag_args(&parser));
+    cr_assert(not(has_flag_args(&parser)));
     char *buf[POS_BUF_SIZE];
     size_t actual = parse_positional(&parser, buf);
-    assert(actual == 4);
+    cr_assert(eq(uptr, actual, 4));
     for (int i = 0; i < 4; i++) {
-        assert(strcmp(ARGS[i + 1], buf[i]) == 0);
+        cr_assert(eq(str, ARGS[i + 1], buf[i]));
     }
 }
 
-void test_basic_flags() {
+Test(argparse, basic_flags) {
     static char *ARGS[] = {"exe", "--foo", "foot", "--baz", "-b" /* bar */, NULL};
     struct simple_flags expected_flags = {
         .foo = "foot",
@@ -96,19 +92,10 @@ void test_basic_flags() {
     struct arg_parser parser = init_args(5, ARGS);
     struct simple_flags actual_flags = {0};
     parse_simple_flags(&parser, &actual_flags);
-    assert(!has_args(&parser));
+    cr_assert(not(has_args(&parser)));
     assert_flags_equal(&expected_flags, &actual_flags);
 }
 
-int main(int argc, char *argv[]) {
-    #ifdef NDEBUG
-        #error "Can't set NDEBUG"
-    #endif
-    printf("Running empty_args:\n");
-    test_empty_args();
-    printf("Running only_positional:\n");
-    test_only_positional();
-    printf("Running basic_flags:\n");
-    test_basic_flags();
-}
-
+#ifdef __clang__
+  #pragma clang diagnostic pop
+#endif
