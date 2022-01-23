@@ -44,11 +44,18 @@ static void parse_simple_flags(struct arg_parser *parser, struct simple_flags *f
         }
     }
 }
+static bool nullsafe_eq(const char *first, const char *second) {
+    if (first == NULL) return second == NULL;
+    else if (second == NULL) return false;
+    else {
+        return strcmp(first, second) == 0;
+    }
+}
 static void assert_flags_equal(struct simple_flags *expected, struct simple_flags *actual) {
-    cr_assert(eq(str, expected->foo, actual->foo));
+    cr_assert(nullsafe_eq(expected->foo, actual->foo));
     cr_assert(eq(u8, expected->bar, actual->bar), "Expected --bar=%d, but got --bar=%d", expected->bar, actual->bar);
     cr_assert(eq(u8, expected->baz, actual->baz), "Expected --baz=%d, but got --baz=%d", expected->baz, actual->baz);
-    cr_assert(eq(str, expected->long_only_value, actual->long_only_value));
+    cr_assert(nullsafe_eq(expected->long_only_value, actual->long_only_value));
 }
 #define POS_BUF_SIZE 12
 static size_t parse_positional(struct arg_parser *parser, char *buf[POS_BUF_SIZE]) {
