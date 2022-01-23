@@ -7,9 +7,12 @@
  * 
  * Source code & issue tracker: https://github.com/Techcable/plainlibs
  * 
- * VERSION: 0.1.0-beta.2
+ * VERSION: 0.1.0-beta.3-dev
  *
  * CHANGELOG:
+ *
+ * NEXT:
+ *    - Fixed assertion to allow single-char flags (ex: -x)
  * 0.1.0-beta.2:
  *    - Corrected support for positional arguments (and --)
  * 0.1.0-beta.1 - Initial release
@@ -130,7 +133,7 @@ static bool match_arg(struct arg_parser *parser, const char *full_name, const st
         case 2:
             // Both of these cases should've been cought earlier (in has_flag_args)
             assert(arg[0] == '-');
-            assert(memcmp(arg, "--", 2) == 0);
+            assert(memcmp(arg, "--", 2) != 0);
             char actual_short = arg[1];
             if (config->short_name != NULL && actual_short == *config->short_name) {
                 consume_arg(parser);
