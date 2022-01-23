@@ -1,1 +1,6 @@
 option('staticlib', type: 'boolean', description: 'build a static library containing all the sources. If this is false (the default), then the meson dependency will only include headers', value: false)
+
+# Enables builing the intenral tests
+#
+# This is off by default, as you probably don't want to run my tests in your own project :)
+option('tests', type: 'feature', description: 'Enables building the internal tests', value: 'disabled')

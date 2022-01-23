@@ -10,13 +10,14 @@ plainlib_includes = include_directories('include')
 
 plainlib_sources = []
 
-if get_option('staticlib')
+if get_option('staticlib') and plainlib_sources.length() > 0
   # Declares plainlibs as a static library
   # 
   # This is only nessicary if the library you're using has a seperate source file.
   # Header only utilities do not need to build this
   plainlib_link = [static_library(
      'plain', # Name ourselves just 'plain' (so we become libplain.a on Linux)
+     plainlib_sources,
      include_directories: plainlib_includes,
   )]
 else
@@ -31,3 +32,6 @@ plainlib_dep = declare_dependency(
   # away unused functions
   link_with: plainlib_link,
 )
+
+# Subdirectory for tests
+subdir('tests')
