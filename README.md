@@ -10,7 +10,6 @@ Lightweight single-file utilities for C99.
 ## Included Libraries
 - argparse (header only) ([docs](./docs/argparse.md))
    - A lightweight argument parsing library.
-
 ## Structure
 Most of these libraries are header only, although some require an additional source file (`.c`).
 
@@ -78,7 +77,23 @@ See the [meson options file](./meson-options.txt) for all available options.
 ## Portablity
 Except where otherwise noted, all of these utilities should be able to be compiled with a conformant C99 compiler.
 
-Unless stated otherwise, they should support both Windows (MSVC) and all Unix-like/POSIX systems.
+Unless explicitly stated otherwise, they should all support both Windows (MSVC) and all Unix-like/POSIX systems.
+
+## Similar Projects
+If plainlibs doesn't have what you're loking for, consider checking out the following projects:
+
+- [klib](https://github.com/attractivechaos/klib/) - Focuses on generic collections (vector/hashmap)
+   - Extremely mature and fast :)
+   - Most headers and utilities in this library can operate indepdently of each other :)
+- [zlib](https://github.com/zpl-c/zpl) - General lightweight framework
+   - Mature (but maybe a little monolithic)
+- [sds](https://github.com/antirez/sds) - String library used by Redis, binary compatible with `char*`
+- [clib](https://github.com/clibs/clib) - The unofficial package manager for C.  Focuses on lightweight libraries
+   - Mature, lightweight, and builtin support for many libraries
+   - This can be used with most (or all) of the projects above :)
+   - The [wiki](https://github.com/clibs/clib/wiki/Packages) is also an excellent place to find lightweight C libraries
+
+See also [awesome-c](https://github.com/oz123/awesome-c) for a currated list of open-source C projects. It excludes C++ libs, although many of the libraries are heavyweight :(
 
 ## License
 ![CC0 License](https://licensebuttons.net/p/zero/1.0/88x31.png)
