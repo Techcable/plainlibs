@@ -2,24 +2,29 @@ plainlibs ![language](https://img.shields.io/badge/language-C99-blue) ![license]
 =========
 Lightweight single-file utilities for C99.
 
-Most of these libraries are header only, although some require an additional source file (`.c`).
-
-
-Sometimes this additional source filesis nessicary to either:
-1. reduce binary size (and avoid duplicating large functions)
-2. reduce compile times
-
-This project is intended to be added as a git submodule, although the nessicary files can also be copied directly.
-
-After adding this to your include path, using a libary then be as simple as writing `#include "plain/argparse.h"` (or whatever library you want) inside your source files (See below).
+## Key Features
+- Portable across Unix & Windows (including MSVC)
+- Zero dependencies (besides C stdlib)
+- Extremely lightweight
 
 ## Included Libraries
 - argparse (header only) ([docs](./docs/argparse.md))
    - A lightweight argument parsing library.
 
+## Structure
+Most of these libraries are header only, although some require an additional source file (`.c`).
+
+Sometimes this additional source filesis nessicary to either:
+1. reduce binary size (and avoid duplicating large functions)
+2. reduce compile times
+
+After adding this to your include path, using a libary should then be as simple as writing `#include "plain/argparse.h"` (or whatever library you want) inside your source files (See below).
+
+See below for more detailed instructoions on using this.
+
 ## Projects that use these libraries
 | Name | Description | Used libraries | Build style |
-|-----------------------------------------------------------------|-----------------------------|----------------------|
+|-----------------------------------------------------------------|-----------------------------|----------------------|--------|
 | [Techcable/wrap-shell](https://github.com/Techcable/wrap-shell) | A wrapper for [xonsh](https://xon.sh/) shell with automatic fallback to zsh | argparse | Meson |
 
 Consider looking at my projects for examples of good usage :)
