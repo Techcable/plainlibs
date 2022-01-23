@@ -1,0 +1,1 @@
+option('staticlib', type: 'boolean', description: 'build a static library containing all the sources. If this is false (the default), then the meson dependency will only include headers', value: false)
