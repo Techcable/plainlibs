@@ -115,7 +115,7 @@ finished_flags:
     return false;
 }
 
-static const struct arg_config DEFAULT_CONFIG = {};
+static const struct arg_config DEFAULT_CONFIG = {0};
 static bool match_arg(struct arg_parser *parser, const char *full_name, const struct arg_config *config) {
     assert(parser != NULL);
     assert(full_name != NULL);
@@ -192,3 +192,4 @@ static bool match_arg(struct arg_parser *parser, const char *full_name, const st
 }
 
 #undef _ARG_UNREACHABLE // Macro hygine
+
