@@ -67,21 +67,23 @@ This project can be used as a meson subproject. You would git clone and put it i
 
 Since this project has a meson build file, it can be quite easily used as a dependency.
 
+See [Techcable/wrap-shell](https://github.com/Techcable/wrap-shell) for a simple example of how to use this with a meson project.
+
 By defualt, the meson dependency only includes headers (and doesn't compile any sources).
 
-You can disable this by setting the `stati`
+If the utility you want to use is not header-only, then you can easily enable building as a static library by setting the `staticlib` option to true. This will build a small (<32 kb) static library with all the needed sources. This can be done by setting the `default_options: ['-Dstaticlib=true']` keyword arg to the corresponding `dependency()` call.
 
-See [Techcable/wrap-shell](https://github.com/Techcable/wrap-shell) for a simple example of how to use this with a meson project.
+See the [meson options file](./meson-options.txt) for all available options.
 
 ## Portablity
 Except where otherwise noted, all of these utilities should be able to be compiled with a conformant C99 compiler.
 
-They should support both Windows (MSVC) and Unix-like systems.
+Unless stated otherwise, they should support both Windows (MSVC) and all Unix-like/POSIX systems.
 
 ## License
 ![CC0 License](https://licensebuttons.net/p/zero/1.0/88x31.png)
 
-Everything in this repository is dual-licensed under the [Creative Commons Zero v1.0](./LICENSE-CC0) and the [MIT LICENSE][./LICENSE-MIT].  You may use either at your option.
+Everything in this repository is dual-licensed under the [Creative Commons Zero v1.0](./LICENSE-CC0) and the [MIT LICENSE](./LICENSE-MIT).  You may use either at your option.
 
 Using CC0 makes this effectively public domain. In particular, this means you do not need to provide any sort of license notice if you copy/paste these libraries directory into your own code. This is in contrast to the standard MIT license.
 
