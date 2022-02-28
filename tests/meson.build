@@ -18,7 +18,8 @@ endif
 
 test_sources = [
   'argparse.c',
-  'intbuiltins.c'
+  'intbuiltins.c',
+  'intmath.c'
 ]
 
 plainlib_tests = executable(
