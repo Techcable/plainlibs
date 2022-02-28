@@ -1,12 +1,12 @@
 /**
  * A C99 argparsing library, part of plainlibs.
- * 
+ *
  * No documentation (yet), just read the source.
- * 
+ *
  * Dual-licensed under Creative Commons CC0 (Public Domain) and the MIT License.
- * 
+ *
  * Source code & issue tracker: https://github.com/Techcable/plainlibs
- * 
+ *
  * VERSION: 0.1.0-beta.3-dev
  *
  * CHANGELOG:
@@ -17,16 +17,17 @@
  *    - Corrected support for positional arguments (and --)
  * 0.1.0-beta.1 - Initial release
  */
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
-#define _ARG_UNREACHABLE() do { \
-        assert(false); \
+#define _ARG_UNREACHABLE()       \
+    do {                         \
+        assert(false);           \
         __builtin_unreachable(); \
-    } while(false)
+    } while (false)
 
 struct arg_parser {
     int idx;
@@ -44,26 +45,24 @@ struct arg_config {
     bool flag;
 };
 
-static inline bool has_args(struct arg_parser *parser) {
+static inline bool has_args(struct arg_parser* parser) {
     return parser->idx < parser->argc;
 }
 // Forward declaration (because it actually has to do some amount of work)
-static bool has_flag_args(struct arg_parser *parser);
+static bool has_flag_args(struct arg_parser* parser);
 static inline struct arg_parser init_args(int argc, char* argv[]) {
-    struct arg_parser parser = {
-        .idx = 1, // NOTE: Arg 0 is program name
-        .argv = argv,
-        .argc = argc,
-        .current_value = NULL
-    };
+    struct arg_parser parser = {.idx = 1, // NOTE: Arg 0 is program name
+                                .argv = argv,
+                                .argc = argc,
+                                .current_value = NULL};
     return parser;
 }
-static inline char* consume_arg(struct arg_parser *parser) {
+static inline char* consume_arg(struct arg_parser* parser) {
     assert(has_args(parser)); // Bounds check
     return parser->argv[parser->idx++];
 }
 
-static inline char *current_arg(struct arg_parser *parser) {
+static inline char* current_arg(struct arg_parser* parser) {
     if (has_args(parser)) {
         return parser->argv[parser->idx];
     } else {
@@ -71,10 +70,12 @@ static inline char *current_arg(struct arg_parser *parser) {
     }
 }
 
-static bool has_flag_args(struct arg_parser *parser) {
-    if (!has_args(parser)) return false;
-    if (parser->finished_flags) return false;
-    char *arg = current_arg(parser);
+static bool has_flag_args(struct arg_parser* parser) {
+    if (!has_args(parser))
+        return false;
+    if (parser->finished_flags)
+        return false;
+    char* arg = current_arg(parser);
     size_t current_arg_len = strlen(arg);
     switch (current_arg_len) {
         case 0:
@@ -119,11 +120,13 @@ finished_flags:
 }
 
 static const struct arg_config DEFAULT_CONFIG = {0};
-static bool match_arg(struct arg_parser *parser, const char *full_name, const struct arg_config *config) {
+static bool match_arg(struct arg_parser* parser, const char* full_name, const struct arg_config* config) {
     assert(parser != NULL);
     assert(full_name != NULL);
-    if (!has_flag_args(parser)) return false;
-    if (config == NULL) config = &DEFAULT_CONFIG;
+    if (!has_flag_args(parser))
+        return false;
+    if (config == NULL)
+        config = &DEFAULT_CONFIG;
     char* arg = current_arg(parser);
     size_t len = strlen(arg);
     switch (len) {
@@ -146,12 +149,12 @@ static bool match_arg(struct arg_parser *parser, const char *full_name, const st
             assert(len >= 3);
             if (memcmp(arg, "--", 2) == 0) {
                 // Good, we have a flag
-                char *actual_name = &arg[2];
+                char* actual_name = &arg[2];
                 bool match = strcmp(actual_name, full_name) == 0;
-                const char **aliases = config->aliases;
+                const char** aliases = config->aliases;
                 if (aliases != NULL && !match) {
                     while (*aliases != NULL) {
-                        const char *alias = *aliases;
+                        const char* alias = *aliases;
                         if (strcmp(alias, actual_name) == 0) {
                             match = true;
                             break;
@@ -177,22 +180,21 @@ static bool match_arg(struct arg_parser *parser, const char *full_name, const st
             }
     }
     _ARG_UNREACHABLE();
-    matched_arg:
-        parser->current_value = NULL;
-        if (config->flag) {
-            return true;
-        }
-        // Parse value
-        if (has_args(parser)) {
-            char* value = consume_arg(parser);
-            assert(value != NULL);
-            parser->current_value = value;
-            return true;
-        } else {
-            fprintf(stderr, "ERROR: Expected a value for --%s\n", full_name);
-            exit(1);
-        }
+matched_arg:
+    parser->current_value = NULL;
+    if (config->flag) {
+        return true;
+    }
+    // Parse value
+    if (has_args(parser)) {
+        char* value = consume_arg(parser);
+        assert(value != NULL);
+        parser->current_value = value;
+        return true;
+    } else {
+        fprintf(stderr, "ERROR: Expected a value for --%s\n", full_name);
+        exit(1);
+    }
 }
 
 #undef _ARG_UNREACHABLE // Macro hygine
-
