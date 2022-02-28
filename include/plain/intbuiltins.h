@@ -447,7 +447,7 @@ static inline bool _plainlib_int64_muls_fallback(int64_t first, int64_t second, 
          * Of course everything changes if nlz is a CPU builtin.
          * In that case we should use the other implmenetaiton....
          */
-        int64_t c = ((~(first ^ second)) >> 31) + (1LL << 31);
+        int64_t c = ((~(first ^ second)) >> 63) + (1LL << 63);
         return first_abs > (c / second_abs);
     }
 }

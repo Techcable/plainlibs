@@ -49,3 +49,43 @@ Test(intbuiltins, nlz64) {
     union nlz_func func = {.nlz64 = nlz};
     test_nlz(func, 64);
 }
+
+typedef bool (*Int64CheckedOp)(int64_t, int64_t, int64_t*);
+
+static void assert_mul_overflowing(Int64CheckedOp target, int64_t a, int64_t b, bool expected_overflow) {
+    /*
+     * Taking advantage of twos complement wrapping,
+     * finding the actual result is easy (regardless of whether or not overflow).
+     *
+     * Mind the fact that signed overflow is UB.
+     */
+    int64_t expected_res = (int64_t) (((uint64_t) a) * ((uint64_t) b));
+    int64_t actual_res = 0;
+    bool actual_overflow = target(a, b, &actual_res);
+    cr_assert(
+        eq(int, actual_overflow != 0, expected_overflow != 0),
+        "Epected overflow = %s for %lld * %lld = %lld, but got %s",
+        expected_overflow ? "true" : "false",
+        a, b, expected_res,
+        actual_overflow ? "true" : "false"
+    );
+    cr_assert(eq(i64, actual_res, expected_res));
+}
+
+/*
+ * Too lazy to test all the other overflow ops.
+ *
+ * Focus on 64 bits and especially multiplication.
+ */
+
+Test(intbuiltins, muls_i64_fallback) {
+    Int64CheckedOp target = _plainlib_int64_muls_fallback;
+    // quick smoke tests
+    assert_mul_overflowing(target, INT64_MAX, 1, false);
+    assert_mul_overflowing(target, INT64_MAX / 2, 2, false);
+    assert_mul_overflowing(target, INT64_MAX, 0, false);
+    assert_mul_overflowing(target, INT64_MAX, 2, true);
+    assert_mul_overflowing(target, INT64_MAX - 1, 2, true);    
+    assert_mul_overflowing(target, INT64_MAX - 1, 2, true);
+
+}
