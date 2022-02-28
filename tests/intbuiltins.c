@@ -59,16 +59,16 @@ static void assert_mul_overflowing(Int64CheckedOp target, int64_t a, int64_t b, 
      *
      * Mind the fact that signed overflow is UB.
      */
-    int64_t expected_res = (int64_t) (((uint64_t) a) * ((uint64_t) b));
+    int64_t expected_res = (int64_t)(((uint64_t)a) * ((uint64_t)b));
     int64_t actual_res = 0;
     bool actual_overflow = target(a, b, &actual_res);
-    cr_assert(
-        eq(int, actual_overflow != 0, expected_overflow != 0),
-        "Epected overflow = %s for %lld * %lld = %lld, but got %s",
-        expected_overflow ? "true" : "false",
-        a, b, expected_res,
-        actual_overflow ? "true" : "false"
-    );
+    cr_assert(eq(int, actual_overflow != 0, expected_overflow != 0),
+              "Epected overflow = %s for %lld * %lld = %lld, but got %s",
+              expected_overflow ? "true" : "false",
+              a,
+              b,
+              expected_res,
+              actual_overflow ? "true" : "false");
     cr_assert(eq(i64, actual_res, expected_res));
 }
 
@@ -85,7 +85,10 @@ Test(intbuiltins, muls_i64_fallback) {
     assert_mul_overflowing(target, INT64_MAX / 2, 2, false);
     assert_mul_overflowing(target, INT64_MAX, 0, false);
     assert_mul_overflowing(target, INT64_MAX, 2, true);
-    assert_mul_overflowing(target, INT64_MAX - 1, 2, true);    
     assert_mul_overflowing(target, INT64_MAX - 1, 2, true);
-
+    assert_mul_overflowing(target, INT64_MAX - 1, 2, true);
+    assert_mul_overflowing(target, INT64_MIN, -1, true);
+    assert_mul_overflowing(target, INT64_MIN, -2, true);
+    assert_mul_overflowing(target, INT64_MIN / 2, -2, true);
+    assert_mul_overflowing(target, INT64_MIN / 2, 2, false);
 }
