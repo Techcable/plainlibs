@@ -24,28 +24,28 @@ static void test_nlz(union nlz_func func, int bits) {
 
 Test(intbuiltins, nlz_fallback32) {
     // Fallback actually has defined behavior for nlz(0). GCC does not
-    int (*nlz)(uint32_t) = _plainlib_int_nlz32_fallback;
+    int (*nlz)(uint32_t) = _plain_int_nlz32_fallback;
     cr_assert(eq(i32, nlz(0), 32));
     union nlz_func func = {.nlz32 = nlz};
     test_nlz(func, 32);
 }
 
 Test(intbuiltins, nlz32) {
-    int (*nlz)(uint32_t) = plainlib_int_nlz32;
+    int (*nlz)(uint32_t) = plain_int_nlz32;
     union nlz_func func = {.nlz32 = nlz};
     test_nlz(func, 32);
 }
 
 Test(intbuiltins, nlz_fallback64) {
     // Fallback actually has defined behavior for nlz(0). GCC does not
-    int (*nlz)(uint64_t) = _plainlib_int_nlz64_fallback;
+    int (*nlz)(uint64_t) = _plain_int_nlz64_fallback;
     cr_assert(eq(i32, nlz(0), 64));
     union nlz_func func = {.nlz64 = nlz};
     test_nlz(func, 64);
 }
 
 Test(intbuiltins, nlz64) {
-    int (*nlz)(uint64_t) = plainlib_int_nlz64;
+    int (*nlz)(uint64_t) = plain_int_nlz64;
     union nlz_func func = {.nlz64 = nlz};
     test_nlz(func, 64);
 }
@@ -79,7 +79,7 @@ static void assert_mul_overflowing(Int64CheckedOp target, int64_t a, int64_t b, 
  */
 
 Test(intbuiltins, muls_i64_fallback) {
-    Int64CheckedOp target = _plainlib_int_overflowing_mul64s_fallback;
+    Int64CheckedOp target = _plain_int_overflowing_mul64s_fallback;
     // quick smoke tests
     assert_mul_overflowing(target, INT64_MAX, 1, false);
     assert_mul_overflowing(target, INT64_MAX / 2, 2, false);

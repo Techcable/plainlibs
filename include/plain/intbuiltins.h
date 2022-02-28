@@ -45,7 +45,7 @@
  *
  * This is used when compielr intrinsics are unavailable.
  */
-static inline int _plainlib_int_nlz32_fallback(uint32_t x) {
+static inline int _plain_int_nlz32_fallback(uint32_t x) {
     /*
      * See Hacker's Delight
      *
@@ -90,12 +90,12 @@ static inline int _plainlib_int_nlz32_fallback(uint32_t x) {
  *
  * Undefined behavior if the specified value is zero (matching GCC behavior).
  */
-static inline int plainlib_int_nlz32(uint32_t val) {
+static inline int plain_int_nlz32(uint32_t val) {
     assert(val != 0);
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_clz(val);
 #else
-    return _plainlib_int_nlz32_fallback(val);
+    return _plain_int_nlz32_fallback(val);
 #endif
 }
 
@@ -104,7 +104,7 @@ static inline int plainlib_int_nlz32(uint32_t val) {
  *
  * This is used when compiler intrinsics are unavailable.
  */
-static inline int _plainlib_int_nlz64_fallback(uint64_t x) {
+static inline int _plain_int_nlz64_fallback(uint64_t x) {
     /*
      * See Hacker's Delight
      *
@@ -154,12 +154,12 @@ static inline int _plainlib_int_nlz64_fallback(uint64_t x) {
  *
  * Undefined behavior if the specified value is zero (matching GCC behavior).
  */
-static inline int plainlib_int_nlz64(uint64_t val) {
+static inline int plain_int_nlz64(uint64_t val) {
     assert(val != 0);
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_clzll((unsigned long long)val);
 #else
-    return _plainlib_int_nlz64_fallback(val);
+    return _plain_int_nlz64_fallback(val);
 #endif
 }
 
@@ -177,7 +177,7 @@ static inline int plainlib_int_nlz64(uint64_t val) {
 /**
  * Fallback implementation of addExact(int, int)
  */
-static inline bool _plainlib_int_overflowing_add32s_fallback(int32_t first, int32_t second, int32_t* res) {
+static inline bool _plain_int_overflowing_add32s_fallback(int32_t first, int32_t second, int32_t* res) {
     /*
      * Assume 64 bit machine, promote to 64 bit integers
      *
@@ -202,18 +202,18 @@ static inline bool _plainlib_int_overflowing_add32s_fallback(int32_t first, int3
  * - Java Math.addExact(int, int)
  * - Rust i32::overflowing_add
  */
-static inline bool plainlib_int_overflowing_add32s(int32_t first, int32_t second, int32_t* res) {
+static inline bool plain_int_overflowing_add32s(int32_t first, int32_t second, int32_t* res) {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_add_overflow(first, second, res);
 #else
-    return _plainlib_int_overflowing_add32s_fallback(first, second, res);
+    return _plain_int_overflowing_add32s_fallback(first, second, res);
 #endif
 }
 
 /**
  * Fallback implmentation of subtractExact(int, int)
  */
-static inline bool _plainlib_int_overflowing_sub32s_fallback(int32_t first, int32_t second, int32_t* res) {
+static inline bool _plain_int_overflowing_sub32s_fallback(int32_t first, int32_t second, int32_t* res) {
     /*
      * Assume 64 bit machine, promote to 64 bit integers
      *
@@ -238,18 +238,18 @@ static inline bool _plainlib_int_overflowing_sub32s_fallback(int32_t first, int3
  * - Java Math.subExact(int, int)
  * - Rust i32::overflowing_add
  */
-static inline bool plainlib_int_overflowing_sub32s(int32_t first, int32_t second, int32_t* res) {
+static inline bool plain_int_overflowing_sub32s(int32_t first, int32_t second, int32_t* res) {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_sub_overflow(first, second, res);
 #else
-    return _plainlib_int_overflowing_sub32s_fallback(first, second, res);
+    return _plain_int_overflowing_sub32s_fallback(first, second, res);
 #endif
 }
 
 /**
  * Fallback implemnetaiton of multiplyExact(int, int)
  */
-static inline bool _plainlib_int_overflowing_mul32s_fallback(int32_t first, int32_t second, int32_t* res) {
+static inline bool _plain_int_overflowing_mul32s_fallback(int32_t first, int32_t second, int32_t* res) {
     /*
      * Assume 64 bit machine, promote to 64 bit integers
      *
@@ -289,18 +289,18 @@ static inline bool _plainlib_int_overflowing_mul32s_fallback(int32_t first, int3
  * - Java Math.mulExact(int, int)
  * - Rust i32::overflowing_mul
  */
-static inline bool plainlib_int_overflowing_mul32s(int32_t first, int32_t second, int32_t* res) {
+static inline bool plain_int_overflowing_mul32s(int32_t first, int32_t second, int32_t* res) {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_mul_overflow(first, second, res);
 #else
-    return _plainlib_int_overflowing_mul32s_fallback(first, second, res);
+    return _plain_int_overflowing_mul32s_fallback(first, second, res);
 #endif
 }
 
 /**
  * Fallback implementation of addExact(long, long)
  */
-static inline bool _plainlib_int_overflowing_add64s_fallback(int64_t first, int64_t second, int64_t* res) {
+static inline bool _plain_int_overflowing_add64s_fallback(int64_t first, int64_t second, int64_t* res) {
     /*
      * See Hacker's Delight Chapter 2-13 section "Signed Add/Subtract".
      *
@@ -326,18 +326,18 @@ static inline bool _plainlib_int_overflowing_add64s_fallback(int64_t first, int6
  * - Java Math.addExact(long, long)
  * - Rust i64::overflowing_add
  */
-static inline bool plainlib_int_overflowing_add64s(int64_t first, int64_t second, int64_t* res) {
+static inline bool plain_int_overflowing_add64s(int64_t first, int64_t second, int64_t* res) {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_add_overflow(first, second, res);
 #else
-    return _plainlib_int_overflowing_add64s_fallback(first, second, res);
+    return _plain_int_overflowing_add64s_fallback(first, second, res);
 #endif
 }
 
 /**
  * Fallback implementation of subtractExact(long, long)
  */
-static inline bool _plainlib_int_overflowing_sub64s_fallback(int64_t first, int64_t second, int64_t* res) {
+static inline bool _plain_int_overflowing_sub64s_fallback(int64_t first, int64_t second, int64_t* res) {
     /*
      * See Hacker's Delight Chapter 2-13 section "Signed Add/Subtract".
      *
@@ -363,11 +363,11 @@ static inline bool _plainlib_int_overflowing_sub64s_fallback(int64_t first, int6
  * - Java Math.subtractExact(long, long)
  * - Rust i64::overflowing_sub
  */
-static inline bool plainlib_int_overflowing_sub64s(int64_t first, int64_t second, int64_t* res) {
+static inline bool plain_int_overflowing_sub64s(int64_t first, int64_t second, int64_t* res) {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_sub_overflow(first, second, res);
 #else
-    return _plainlib_int_overflowing_sub64s_fallback(first, second, res);
+    return _plain_int_overflowing_sub64s_fallback(first, second, res);
 #endif
 }
 
@@ -376,7 +376,7 @@ static inline bool plainlib_int_overflowing_sub64s(int64_t first, int64_t second
  *
  * This is complicated....
  */
-static inline bool _plainlib_int_overflowing_mul64s_fallback(int64_t first, int64_t second, int64_t* res) {
+static inline bool _plain_int_overflowing_mul64s_fallback(int64_t first, int64_t second, int64_t* res) {
     /*
      * See Hacker's Delight Chapter 2-13 section "Multiplication".
      *
@@ -465,11 +465,11 @@ static inline bool _plainlib_int_overflowing_mul64s_fallback(int64_t first, int6
  * - Java Math.multiplyExact(long, long)
  * - Rust i64::overflowing_mul
  */
-static inline bool plainlib_int_overflowing_mul64s(int64_t first, int64_t second, int64_t* res) {
+static inline bool plain_int_overflowing_mul64s(int64_t first, int64_t second, int64_t* res) {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_mul_overflow(first, second, res);
 #else
-    return _plainlib_int_overflowing_mul64s(first, second, res);
+    return _plain_int_overflowing_mul64s(first, second, res);
 #endif
 }
 
