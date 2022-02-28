@@ -79,7 +79,7 @@ static void assert_mul_overflowing(Int64CheckedOp target, int64_t a, int64_t b, 
  */
 
 Test(intbuiltins, muls_i64_fallback) {
-    Int64CheckedOp target = _plainlib_int_checked_mul64s_fallback;
+    Int64CheckedOp target = _plainlib_int_overflowing_mul64s_fallback;
     // quick smoke tests
     assert_mul_overflowing(target, INT64_MAX, 1, false);
     assert_mul_overflowing(target, INT64_MAX / 2, 2, false);
