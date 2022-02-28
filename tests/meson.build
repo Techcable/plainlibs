@@ -17,7 +17,8 @@ elif not get_option('staticlib')
 endif
 
 test_sources = [
-  'argparse.c'
+  'argparse.c',
+  'intbuiltins.c'
 ]
 
 plainlib_tests = executable(
