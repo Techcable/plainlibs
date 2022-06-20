@@ -43,7 +43,7 @@
 /**
  * Fallback implementation of nlz(int32_t)
  *
- * This is used when compielr intrinsics are unavailable.
+ * This is used when compiler intrinsics are unavailable.
  */
 static inline int _plain_int_nlz32_fallback(uint32_t x) {
     /*
@@ -110,9 +110,8 @@ static inline int _plain_int_nlz64_fallback(uint64_t x) {
      *
      * This is the simple algorithm, ported to 64 bits.
      */
-    uint64_t y;
     int n = 64;
-    y = x >> 32;
+    uint64_t y = x >> 32;
     if (y != 0) {
         n = n - 32;
         x = y;
@@ -138,9 +137,7 @@ static inline int _plain_int_nlz64_fallback(uint64_t x) {
         x = y;
     }
     y = x >> 1;
-    if (y != 0)
-        return n - 2;
-    return n - ((int)x);
+    return (y == 0) ? n - ((int)x) : n - 2;
 }
 
 /*
