@@ -19,7 +19,8 @@ endif
 test_sources = [
   'argparse.c',
   'intbuiltins.c',
-  'intmath.c'
+  'intmath.c',
+  'minmax.c'
 ]
 
 plainlib_tests = executable(
